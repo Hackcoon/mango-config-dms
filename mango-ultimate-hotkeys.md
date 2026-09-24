@@ -1,6 +1,6 @@
 # Mango Ultimate Hotkeys (fury) — LIVING DOC, keep updated
 
-> Last updated: 2026-09-15 (SUPER+J special workspace, MangoWC 0.17.0). MangoWC 0.17.0 + DMS 1.6.
+> Last updated: 2026-09-24 (appendix re-synced: U=special trio, J=scratchpad trio, verified vs config). MangoWC 0.17.0 + DMS 1.6.
 > Source of truth: `~/.config/mango/config.conf` (+ `media.conf`, `dms/` fragments).
 > This file is the hotkey reference to hand to any AI. When binds change, update this file AND the config together.
 > Supersedes `~/mango-dms-hotkeys.md` (left untouched as archive).
@@ -185,6 +185,7 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 - 2026-09-15: added `SUPER+J` calculator (qalculate-qt, last free bare SUPER+letter); appendix refreshed.
 - 2026-09-15: switched MangoWC 0.16.3 → 0.17.0 (source override until unstable catches up); replaced `SUPER+J` calculator with special workspace trio (`toggle_special_tag` / `tag_special_tag` / `tag_special_silent`); appendix refreshed.
 - 2026-09-15: fixed grey desktop on re-login — added `exec-once=systemctl --user start dms` (session target is often already active, so its Wants never refires and DMS stayed dead).
+- 2026-09-24: appendix-only fix — snapshot still showed pre-swap J/U actions; re-synced 6 lines to config (tables already correct).
 
 ## Appendix: raw hotkey source (snapshot 2026-09-15)
 
@@ -368,15 +369,18 @@ bind=SUPER+SHIFT,Tab,viewtoleft_have_client
 bind=SUPER,period,spawn_shell,~/.config/mango/cycle-tag.sh next
 # Cycle workspaces back
 bind=SUPER+SHIFT,period,spawn_shell,~/.config/mango/cycle-tag.sh prev
-bind=SUPER,u,toggle_scratchpad
-bind=SUPER+SHIFT,u,minimized
-bind=SUPER+CTRL,u,restore_minimized
 # Special workspace overlay
-bind=SUPER,j,toggle_special_tag
+bind=SUPER,u,toggle_special_tag
 # Send window to special
-bind=SUPER+SHIFT,j,tag_special_tag
+bind=SUPER+SHIFT,u,tag_special_tag
 # Send silent to special
-bind=SUPER+CTRL,j,tag_special_silent
+bind=SUPER+CTRL,u,tag_special_silent
+# Regular scratchpad toggle
+bind=SUPER,j,toggle_scratchpad
+# Minimize window
+bind=SUPER+SHIFT,j,minimized
+# Restore minimized window
+bind=SUPER+CTRL,j,restore_minimized
 # Kitty dropdown scratchpad
 bind=SUPER+SHIFT,Return,toggle_named_scratchpad,scratch-term,scratch-term,kitty --class scratch-term
 bind=SUPER,1,view,1,0
