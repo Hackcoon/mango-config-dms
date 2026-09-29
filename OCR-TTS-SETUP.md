@@ -210,6 +210,92 @@ voices — only the Kokoro TTS engine above was set up.
 
 ---
 
+## Part 4 — STT dictation (hyprwhspr-rs + Parakeet, Nix-native)
+
+Unlike TTS this is a real NixOS service, no `uv` venv. Engine: `hyprwhspr-rs`
+with NVIDIA Parakeet TDT 0.6B v3 (`istupakov/parakeet-tdt-0.6b-v3-onnx`) on CPU.
+
+### 4a — NixOS module (`ai-stt`)
+
+`modules/programs/ai-stt.nix` (import it, all OFF by default):
+
+```nix
+ai-stt.enable = true;   # service + CLI on PATH
+# ai-stt.cuda = true;   # NVIDIA build (only if CPU latency bothers you)
+```
+
+Notes: module adds you to the `input` group (re-login after first enable),
+uses `unstablePkgs.hyprwhspr-rs` 0.3.33 (stable's 0.3.27 has a broken
+virtual-keyboard injector + broken sendshortcut Lua on Hyprland 0.55).
+
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#nixos
+systemctl --user start hyprwhspr-rs
+```
+
+### 4b — Parakeet model download (~2.4 GB, upstream script's file list)
+
+```bash
+mkdir -p ~/.local/share/hyprwhspr-rs/models/parakeet/parakeet-tdt-0.6b-v3-onnx
+cd ~/.local/share/hyprwhspr-rs/models/parakeet/parakeet-tdt-0.6b-v3-onnx
+BASE="https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/resolve/main"
+for f in encoder-model.onnx encoder-model.onnx.data decoder_joint-model.onnx vocab.txt; do
+  curl -sSL -O "$BASE/$f"
+done
+ls -la   # encoder .data alone is ~2.3 GB
+```
+
+### 4c — Config (`~/.config/hyprwhspr-rs/config.jsonc`)
+
+```jsonc
+{
+  "audio_feedback": true,
+  "audio_device": null,   // null = PipeWire default source (set yours with wpctl)
+  "transcription": {
+    "provider": "parakeet"
+  }
+}
+```
+
+```bash
+systemctl --user restart hyprwhspr-rs
+journalctl --user -u hyprwhspr-rs --since "2 min ago" | grep -i "parakeet.*ready"
+# expect: Parakeet TDT transcription ready
+```
+
+Mic check: `wpctl status` → Sources → `*` marks default. Hardware mute
+buttons (e.g. USB mic switches) bypass software volume — check the physical
+switch first when captures come back empty.
+
+### 4d — Bind in this repo (`mango/config.conf`)
+
+```
+# STT record toggle (hyprwhspr-rs, Parakeet)
+bind=SUPER+SHIFT,m,spawn,hyprwhspr-rs record toggle
+```
+
+`hyprwhspr-rs` is a system package (`/run/current-system/sw/bin`), so the
+bare name works here — unlike the Kokoro trigger, no absolute path needed.
+Press → start sound → talk 3–5 s → press again → text pastes + clipboard.
+Noctalia note: this DMS-only repo stays Noctalia-free; the bind is
+keymode-agnostic.
+
+### 4e — Verify + troubleshoot
+
+```bash
+hyprwhspr-rs record toggle; sleep 4; hyprwhspr-rs record toggle
+journalctl --user -u hyprwhspr-rs --since "3 min ago" | grep -iE "transcribing|inject|clipboard|empty"
+```
+
+- `Transcribing Xs` + `Injecting text` → working.
+- `Empty transcription, nothing to inject` → mic heard silence: physical mute,
+  wrong default source, or you spoke outside the record window.
+- Text in clipboard but not in textbox → paste fallback limits: on Hyprland
+  0.3.27's sendshortcut is broken (0.3.33 fixed input handling); on Mango
+  there is no Hyprland IPC at all, so `Ctrl+V` is the workflow.
+
+---
+
 ## Troubleshooting
 
 ```bash

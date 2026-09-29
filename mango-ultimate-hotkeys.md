@@ -113,6 +113,8 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 | `SUPER + Shift + S` | Window → satty |
 | `SUPER + CTRL + Shift + S` | Fullscreen → satty |
 | `SUPER + Shift + X` | Region → text (OCR extract, clipboard) |
+| `SUPER + Shift + T` | Speak clipboard (Kokoro TTS) |
+| `SUPER + Shift + M` | STT record toggle (Parakeet) |
 | `Print` | Full save (file + clipboard) |
 | `Shift + Print` | Region save |
 | `Alt + Print` | Window save |
@@ -283,6 +285,10 @@ bind=SUPER+SHIFT,s,spawn_shell,dms screenshot window --stdout --no-file --no-cli
 bind=SUPER+CTRL+SHIFT,s,spawn_shell,dms screenshot full --stdout --no-file --no-clipboard --no-notify | satty --filename -
 # Region select to text (OCR extract)
 bind=SUPER+SHIFT,x,spawn_shell,region=$(slurp) || exit 0; grim -g "$region" - | tesseract stdin stdout -l eng 2>/dev/null | wl-copy; notify-send "OCR" "$(wl-paste | head -c 200)"
+# Speak clipboard aloud (Kokoro Heart/Bella, GPU)
+bind=SUPER+SHIFT,t,spawn_shell,wl-paste --no-newline | /home/fury/.local/bin/dusky-kokoro speak --stdin --mode interrupt
+# STT record toggle (hyprwhspr-rs, Parakeet)
+bind=SUPER+SHIFT,m,spawn,hyprwhspr-rs record toggle
 # Quick fullscreen save, no annotation (file plus clipboard)
 bind=NONE,Print,spawn,dms screenshot full
 # Quick region save, no annotation
