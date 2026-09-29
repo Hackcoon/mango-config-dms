@@ -112,6 +112,7 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 | `SUPER + S` | Region → satty annotate |
 | `SUPER + Shift + S` | Window → satty |
 | `SUPER + CTRL + Shift + S` | Fullscreen → satty |
+| `SUPER + Shift + X` | Region → text (OCR extract, clipboard) |
 | `Print` | Full save (file + clipboard) |
 | `Shift + Print` | Region save |
 | `Alt + Print` | Window save |
@@ -280,6 +281,8 @@ bind=SUPER,s,spawn_shell,dms screenshot --stdout --no-file --no-clipboard --no-n
 bind=SUPER+SHIFT,s,spawn_shell,dms screenshot window --stdout --no-file --no-clipboard --no-notify | satty --filename -
 # Fullscreen to satty
 bind=SUPER+CTRL+SHIFT,s,spawn_shell,dms screenshot full --stdout --no-file --no-clipboard --no-notify | satty --filename -
+# Region select to text (OCR extract)
+bind=SUPER+SHIFT,x,spawn_shell,region=$(slurp) || exit 0; grim -g "$region" - | tesseract stdin stdout -l eng 2>/dev/null | wl-copy; notify-send "OCR" "$(wl-paste | head -c 200)"
 # Quick fullscreen save, no annotation (file plus clipboard)
 bind=NONE,Print,spawn,dms screenshot full
 # Quick region save, no annotation
