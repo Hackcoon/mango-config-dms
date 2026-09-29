@@ -174,6 +174,42 @@ sections, `SUPER+ALT+N/D` shell-swaps, or `XF86` Noctalia binds.
 
 ---
 
+## Models on disk (what, where, how to re-fetch by hand)
+
+Yes — everything is downloaded to this PC, nothing streams. The installer
+fetched them in step 2b; this section documents exact locations so you can
+back them up or re-fetch without re-running the installer.
+
+```bash
+~/contained_apps/uv/dusky_kokoro/models/kokoro-v1.0.fp16-gpu.onnx  # 170 MB (177,464,787 bytes)
+~/contained_apps/uv/dusky_kokoro/models/voices-v1.0.bin           # 27 MB (54 voice styles)
+~/contained_apps/uv/dusky_kokoro/.venv/                           # 2.4 GB (onnxruntime-gpu 1.30.0 + CUDA 13.4 wheels + kokoro-onnx 0.6.1)
+~/.cache/dusky-kokoro/audio/                                      # spoken output archive (grows over time)
+```
+
+Source of truth (pinned in `kokoro_installer.sh` as `RELEASE_BASE`):
+
+```bash
+BASE="https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0"
+mkdir -p ~/contained_apps/uv/dusky_kokoro/models && cd ~/contained_apps/uv/dusky_kokoro/models
+curl -sSL -O "$BASE/kokoro-v1.0.fp16-gpu.onnx"
+curl -sSL -O "$BASE/voices-v1.0.bin"
+ls -la   # expect 177464787 and 28214398 bytes respectively
+```
+
+Verify integrity any time without the daemon:
+
+```bash
+export LD_LIBRARY_PATH="/run/current-system/sw/share/nix-ld/lib:/run/opengl-driver/lib"
+~/contained_apps/uv/dusky_kokoro/.venv/bin/python ~/contained_apps/uv/dusky_kokoro/dusky_main.py doctor --synth
+# expect: model fp16-gpu ok, voices 54 styles, providers include CUDAExecutionProvider
+```
+
+NOT on disk (never installed here): Parakeet STT models, Silero VAD, Piper
+voices — only the Kokoro TTS engine above was set up.
+
+---
+
 ## Troubleshooting
 
 ```bash
