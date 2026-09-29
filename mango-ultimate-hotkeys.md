@@ -19,7 +19,7 @@
 |---|---|
 | `SUPER + Space` | Spotlight launcher |
 | `SUPER + V` | Clipboard history |
-| `SUPER + M` | Process list |
+| `SUPER + Shift + M` | Process list |
 | `SUPER + Comma` | DMS settings |
 | `SUPER + N` | Notifications panel |
 | `SUPER + Shift + N` | Do not disturb toggle |
@@ -27,11 +27,11 @@
 | `SUPER + O` | Control center |
 | `SUPER + Shift + O` | Restart portals (screenshare fix) |
 | `SUPER + Shift + C` | Color picker |
-| `SUPER + T` | Theme dark/light toggle |
+| `SUPER + Shift + T` | Theme dark/light toggle |
 | `SUPER + Alt + L` | Lock screen |
 | `SUPER + Semicolon` | Emoji picker (spotlight `:e`, needs emojiLauncher) |
 | `CTRL + Alt + P` | Power menu |
-| `SUPER + X` | Power menu quick |
+| `SUPER + Shift + X` | Power menu quick |
 | `SUPER + P` | Power profile cycle (perf/balanced/saver) |
 | `SUPER + Shift + P` | Media play/pause |
 | `SUPER + H` | Cheatsheet (this sheet's live version) |
@@ -112,9 +112,9 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 | `SUPER + S` | Region → satty annotate |
 | `SUPER + Shift + S` | Window → satty |
 | `SUPER + CTRL + Shift + S` | Fullscreen → satty |
-| `SUPER + Shift + X` | Region → text (OCR extract, clipboard) |
-| `SUPER + Shift + T` | Speak clipboard (Kokoro TTS) |
-| `SUPER + Shift + M` | STT record toggle (Parakeet) |
+| `SUPER + X` | Region → text (OCR extract, clipboard) |
+| `SUPER + T` | Speak clipboard (Kokoro TTS) |
+| `SUPER + M` | STT record toggle (Parakeet) |
 | `Print` | Full save (file + clipboard) |
 | `Shift + Print` | Region save |
 | `Alt + Print` | Window save |
@@ -201,7 +201,7 @@ bind=SUPER,space,spawn,dms ipc call spotlight toggle
 # Clipboard history
 bind=SUPER,v,spawn,dms ipc call clipboard toggle
 # Process list
-bind=SUPER,m,spawn,dms ipc call processlist focusOrToggle
+bind=SUPER+SHIFT,m,spawn,dms ipc call processlist focusOrToggle
 # DMS settings
 bind=SUPER,comma,spawn,dms ipc call settings focusOrToggle
 # Notifications panel
@@ -217,7 +217,7 @@ bind=SUPER+SHIFT,o,spawn_shell,systemctl --user restart xdg-desktop-portal xdg-d
 # Color picker
 bind=SUPER+SHIFT,c,spawn,dms ipc call color-picker toggle
 # Theme dark/light toggle
-bind=SUPER,t,spawn,dms ipc call theme toggle
+bind=SUPER+SHIFT,t,spawn,dms ipc call theme toggle
 # Yazi file manager
 bind=SUPER,y,spawn,kitty --class yazi -e yazi
 # Superfile file manager
@@ -284,11 +284,11 @@ bind=SUPER+SHIFT,s,spawn_shell,dms screenshot window --stdout --no-file --no-cli
 # Fullscreen to satty
 bind=SUPER+CTRL+SHIFT,s,spawn_shell,dms screenshot full --stdout --no-file --no-clipboard --no-notify | satty --filename -
 # Region select to text (OCR extract)
-bind=SUPER+SHIFT,x,spawn_shell,region=$(slurp) || exit 0; grim -g "$region" - | tesseract stdin stdout -l eng 2>/dev/null | wl-copy; notify-send "OCR" "$(wl-paste | head -c 200)"
+bind=SUPER,x,spawn_shell,region=$(slurp) || exit 0; grim -g "$region" - | tesseract stdin stdout -l eng 2>/dev/null | wl-copy; notify-send "OCR" "$(wl-paste | head -c 200)"
 # Speak clipboard aloud (Kokoro Heart/Bella, GPU)
-bind=SUPER+SHIFT,t,spawn_shell,wl-paste --no-newline | /home/fury/.local/bin/dusky-kokoro speak --stdin --mode interrupt
+bind=SUPER,t,spawn_shell,wl-paste --no-newline | /home/fury/.local/bin/dusky-kokoro speak --stdin --mode interrupt
 # STT record toggle (hyprwhspr-rs, Parakeet)
-bind=SUPER+SHIFT,m,spawn,hyprwhspr-rs record toggle
+bind=SUPER,m,spawn,hyprwhspr-rs record toggle
 # Quick fullscreen save, no annotation (file plus clipboard)
 bind=NONE,Print,spawn,dms screenshot full
 # Quick region save, no annotation
@@ -305,7 +305,7 @@ bind=CTRL+ALT+SUPER,b,spawn_shell,~/.config/mango/toggle-dms-bar.sh
 # Power menu
 bind=CTRL+ALT,p,spawn,dms ipc call powermenu toggle
 # Power menu quick
-bind=SUPER,x,spawn,dms ipc call powermenu toggle
+bind=SUPER+SHIFT,x,spawn,dms ipc call powermenu toggle
 # Power profile cycle
 bind=SUPER,p,spawn,dms ipc call powerprofile cycle
 # Media play pause
