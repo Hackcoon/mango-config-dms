@@ -1,4 +1,4 @@
-# Free keybinds (fury) — generated 2026-09-25 from `mango/config.conf` (126 binds, DMS-only)
+# Free keybinds (fury) — generated 2026-09-29 from `mango/config.conf` (132 binds, DMS-only)
 
 > Regenerate after any bind change: `rg -n "^(bind|mousebind|axisbind)=" ~/.config/mango/config.conf`.
 > Bare-`SUPER` letters are EXHAUSTED — all 26 taken.
@@ -17,8 +17,8 @@ Key names are mango/XKB style (`semicolon` = `;`, `slash` = `/`,
 
 | Status | Keys |
 |---|---|
-| Taken | `b c f g h i j n o p q r s u v y z, 1-9, return, tab, period, bracketleft, bracketright, arrows` |
-| FREE | `a, d, e, k, l, m, t, w, x, 0, comma (,), semicolon (;), slash (/), apostrophe ('), minus (-), equal (=), backslash (\), grave (`), space` |
+| Taken | `b c f g h i j n o p q r s u v x y z, 1-9, return, tab, period, bracketleft, bracketright, arrows` |
+| FREE | `a, d, e, k, l, m, t, w, 0, comma (,), semicolon (;), slash (/), apostrophe ('), minus (-), equal (=), backslash (\), grave (`), space` |
 
 > Vicinae candidates (verified free 2026-09-25): `SUPER+SHIFT+space`, `SUPER+SHIFT+d` (old rofi slot). `SUPER+ALT+space` is TAKEN (`toggle_all_floating`), `SUPER+CTRL+space` is TAKEN (`togglefloating`).
 
@@ -53,7 +53,7 @@ Key names are mango/XKB style (`semicolon` = `;`, `slash` = `/`,
 
 ## Recommendations for the next binds
 
-1. `SUPER+SHIFT+<letter>` first (`a d e k l m t w x` free, single extra key).
+1. `SUPER+SHIFT+<letter>` first (`a d e k l m t w` free, single extra key).
 2. `SUPER+slash` or `SUPER+apostrophe` for launcher-style popups (prime, mnemonic-adjacent).
 3. `SUPER+ALT+<letter>` when the SHIFT variant is taken (e.g. `SUPER+ALT+V` was the neovim runner-up).
 4. Bare `SUPER` letters are exhausted — `J` now runs the special workspace trio, not the old calculator.
