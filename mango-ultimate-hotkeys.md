@@ -1,6 +1,6 @@
 # Mango Ultimate Hotkeys (fury) — LIVING DOC, keep updated
 
-> Last updated: 2026-09-24 (appendix re-synced: U=special trio, J=scratchpad trio, verified vs config). MangoWC 0.17.0 + DMS 1.6.
+> Last updated: 2026-10-08 (SUPER+ALT+P PiP stick toggle, 135 binds verified). MangoWC 0.17.0 + DMS 1.6.
 > Source of truth: `~/.config/mango/config.conf` (+ `media.conf`, `dms/` fragments).
 > This file is the hotkey reference to hand to any AI. When binds change, update this file AND the config together.
 > Supersedes `~/mango-dms-hotkeys.md` (left untouched as archive).
@@ -84,6 +84,7 @@
 | `SUPER + CTRL + F` | Maximize (keeps bar/border) |
 | `SUPER + CTRL + Space` | Float current |
 | `SUPER + Alt + Space` | Float all |
+| `SUPER + Alt + P` | PiP stick toggle (follow/stay) |
 | `ALT + Tab` / `ALT + Shift + Tab` | Next / prev window (`focusstack`) |
 | `SUPER + Arrows` | Focus dir |
 | `SUPER + CTRL + Arrows` | Swap tiling window (`exchange_client`) |
@@ -173,6 +174,7 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 
 ## Changelog
 
+- 2026-10-08: added `SUPER+ALT+P` PiP stick toggle (`toggleglobal`); appendix refreshed.
 - 2026-09-13: created as the maintained copy (supersedes `mango-dms-hotkeys.md`). Added missing binds (Zen, brave-webgpu, portal restart, prev-group-member), new Mouse table incl. `SUPER+SHIFT+Left-click` float toggle, AI update rules.
 - 2026-09-13: added `SUPER+SHIFT+R` reload_config (dwm restart parity), restored missing `SUPER+SHIFT+H` aliases row.
 - 2026-09-13: added `SUPER+R` restart DMS shell (`systemctl --user restart dms`, dwm bar-restart parity).
@@ -276,6 +278,8 @@ bind=SUPER+CTRL,f,togglemaximizescreen
 bind=SUPER+CTRL,space,togglefloating
 # Float all windows
 bind=SUPER+ALT,space,toggle_all_floating
+# PiP stick toggle (follow/stay)
+bind=SUPER+ALT,p,toggleglobal
 # Screenshots via DMS piped to satty for annotation
 # Region select to satty
 bind=SUPER,s,spawn_shell,dms screenshot --stdout --no-file --no-clipboard --no-notify | satty --filename -
