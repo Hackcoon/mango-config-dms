@@ -1,4 +1,4 @@
-# Free keybinds (fury) — generated 2026-10-08 from `mango/config.conf` (135 binds, DMS-only)
+# Free keybinds (fury) — generated 2026-10-10 from `mango/config.conf` (137 binds, DMS-only)
 
 > Regenerate after any bind change: `rg -n "^(bind|mousebind|axisbind)=" ~/.config/mango/config.conf`.
 > Bare-`SUPER` letters are EXHAUSTED — all 26 taken.
@@ -26,8 +26,8 @@ Key names are mango/XKB style (`semicolon` = `;`, `slash` = `/`,
 
 | Status | Keys |
 |---|---|
-| Taken | `d f h j k l u, space, return, tab, 1-9, arrows` |
-| FREE | `a, b, c, e, g, i, m, n, o, p, q, r, s, t, v, w, x, y, z, 0, comma (,), period (.), semicolon (;), slash (/), apostrophe ('), minus (-), equal (=), brackets, backslash (\), grave (`)` |
+| Taken | `a d f h j k l u, space, return, tab, 1-9, arrows` |
+| FREE | `b, c, e, g, i, m, n, o, p, q, r, s, t, v, w, x, y, z, 0, comma (,), period (.), semicolon (;), slash (/), apostrophe ('), minus (-), equal (=), brackets, backslash (\), grave (`)` |
 
 ## SUPER+ALT (wide open except shell-swap + float-all)
 
@@ -40,7 +40,7 @@ Key names are mango/XKB style (`semicolon` = `;`, `slash` = `/`,
 
 ## Triple layers (nearly untouched)
 
-- `SUPER+CTRL+SHIFT`: only `S` and `Tab` taken — everything else free.
+- `SUPER+CTRL+SHIFT`: `A`, `S` and `Tab` taken — everything else free.
 - `SUPER+ALT+SHIFT`: only `comma` and `period` taken — everything else free.
 
 ## Other

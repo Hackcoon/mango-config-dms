@@ -1,6 +1,6 @@
 # Mango Ultimate Hotkeys (fury) — LIVING DOC, keep updated
 
-> Last updated: 2026-10-08 (SUPER+ALT+P PiP stick toggle, 135 binds verified). MangoWC 0.17.0 + DMS 1.6.
+> Last updated: 2026-10-10 (Fury Audio Studio SUPER+CTRL+A open + SUPER+CTRL+SHIFT+A DSP toggle, 137 binds verified). MangoWC 0.17.0 + DMS 1.6.
 > Source of truth: `~/.config/mango/config.conf` (+ `media.conf`, `dms/` fragments).
 > This file is the hotkey reference to hand to any AI. When binds change, update this file AND the config together.
 > Supersedes `~/mango-dms-hotkeys.md` (left untouched as archive).
@@ -157,6 +157,13 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 | `XF86MonBrightnessUp` | Brightness +5 |
 | `XF86MonBrightnessDown` | Brightness -5 |
 
+## Audio (Fury Audio Studio, NixOS module `services.fury-audio-studio`)
+
+| Shortcut | Action |
+|---|---|
+| `SUPER + CTRL + A` | Open studio window (noise removal, EQ, voice FX) |
+| `SUPER + CTRL + SHIFT + A` | Toggle voice DSP on/off (notifies; restores hardware) |
+
 ## Appearance / behavior
 
 `border 1px` red focus, `radius 12`, `gaps 5`, `focused_opacity 1.0`, `unfocused_opacity 0.9`, `shadows on` (floating only, size 10 blur 15). Mouse `accel -0.5 flat`. DMS fragments sourced from `~/.config/mango/dms/` (colors/layout/outputs/cursor/windowrules; `binds.conf` stays empty, DMS-managed). NOTE: the hardcoded Appearance block in `config.conf` comes *after* the `source=` lines, so it overrides `dms/layout.conf` — DMS Settings tweaks to gaps/border won't take effect unless that block is removed.
@@ -174,6 +181,7 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 
 ## Changelog
 
+- 2026-10-10: added Fury Audio Studio binds (`SUPER+CTRL+A` open studio, `SUPER+CTRL+SHIFT+A` DSP toggle); appendix refreshed (137 binds).
 - 2026-10-08: added `SUPER+ALT+P` PiP stick toggle (`toggleglobal`); appendix refreshed.
 - 2026-09-13: created as the maintained copy (supersedes `mango-dms-hotkeys.md`). Added missing binds (Zen, brave-webgpu, portal restart, prev-group-member), new Mouse table incl. `SUPER+SHIFT+Left-click` float toggle, AI update rules.
 - 2026-09-13: added `SUPER+SHIFT+R` reload_config (dwm restart parity), restored missing `SUPER+SHIFT+H` aliases row.
@@ -192,9 +200,9 @@ Note: single-gesture SHIFT-drag-float is impossible — mango retiles EVERY tile
 - 2026-09-15: fixed grey desktop on re-login — added `exec-once=systemctl --user start dms` (session target is often already active, so its Wants never refires and DMS stayed dead).
 - 2026-09-24: appendix-only fix — snapshot still showed pre-swap J/U actions; re-synced 6 lines to config (tables already correct).
 
-## Appendix: raw hotkey source (snapshot 2026-09-15)
+## Appendix: raw hotkey source (snapshot 2026-10-10)
 
-> Emergency restore copy — 126 binds, count-verified against `config.conf`. Source of truth stays the config files. Refresh per AI rule 8.
+> Emergency restore copy — 137 binds, count-verified against `config.conf`. Source of truth stays the config files. Refresh per AI rule 8.
 
 ```ini
 # ---- DMS keybinds ----
@@ -230,6 +238,16 @@ bind=SUPER+SHIFT,g,spawn,brave-webgpu
 bind=SUPER+ALT,l,spawn,dms ipc call lock lock
 # Emoji picker (spotlight :e trigger, needs emojiLauncher plugin)
 bind=SUPER,semicolon,spawn,dms ipc call spotlight toggleQuery ":e "
+
+# =========================================================================
+# PORTED FROM HYPRLAND (full report: ~/.config/mango/KEYBIND-PORT.md)
+# Tuned for mango 0.16.2 (nixos-unstable via programs.mangowc.package in
+# mango-dms.nix). 0.16 has the new IPC (DMS bar workspaces), groups,
+# switcher, special tags, killclient force, dwindle/fair layouts.
+# NOTE: mango only strips comments starting at col 1 — never put "#"
+# inline on a bind line (it glues onto the last arg and breaks it).
+# =========================================================================
+
 # ---- One-key layout cycling: SUPER+L cycles all 14 mango 0.16 layouts ----
 circle_layout=tile,scroller,monocle,grid,deck,center_tile,vertical_tile,right_tile,vertical_scroller,vertical_grid,vertical_deck,dwindle,fair,vertical_fair
 bind=SUPER,l,switch_layout
@@ -246,6 +264,7 @@ bind=SUPER+ALT,2,setlayout,scroller
 bind=SUPER+ALT,3,setlayout,monocle
 # Jump to dwindle layout
 bind=SUPER+ALT,4,setlayout,dwindle
+
 # ---- Standard ----
 # Dolphin file manager
 bind=SUPER,d,spawn,dolphin
@@ -269,6 +288,7 @@ bind=SUPER+SHIFT,v,spawn,kitty --class nvim -e nvim
 bind=SUPER,Return,spawn,kitty
 # File manager (thunar)
 bind=SUPER,e,spawn,thunar
+
 # ---- Features / extras ----
 # Fullscreen toggle
 bind=SUPER+SHIFT,f,togglefullscreen
@@ -278,6 +298,10 @@ bind=SUPER+CTRL,f,togglemaximizescreen
 bind=SUPER+CTRL,space,togglefloating
 # Float all windows
 bind=SUPER+ALT,space,toggle_all_floating
+# Fury Audio Studio window
+bind=SUPER+CTRL,a,spawn,fury-audio-studio --gui-only
+# Fury DSP on/off toggle
+bind=SUPER+CTRL+SHIFT,a,spawn,fury-audio-studio --toggle
 # PiP stick toggle (follow/stay)
 bind=SUPER+ALT,p,toggleglobal
 # Screenshots via DMS piped to satty for annotation
@@ -299,11 +323,16 @@ bind=NONE,Print,spawn,dms screenshot full
 bind=SHIFT,Print,spawn,dms screenshot
 # Quick window save, no annotation
 bind=ALT,Print,spawn,dms screenshot window
+
 # ---- System ----
 # Close window
 bind=SUPER,q,killclient
+# 0.16 killclient takes a force arg — SIGKILL, replaces KillActiveProcess.sh.
+# (Helper script fallback kept at ~/.config/mango/kill-focused.sh)
 # Force kill (SIGKILL)
 bind=SUPER+SHIFT,q,killclient,force
+# Hide/show the DMS bar (Dank Island). DMS's own `bar hide` IPC refuses
+# island bars, so this flips the config's enabled field + reloads:
 # Toggle DMS bar
 bind=CTRL+ALT+SUPER,b,spawn_shell,~/.config/mango/toggle-dms-bar.sh
 # Power menu
@@ -322,6 +351,7 @@ bind=SUPER+SHIFT,h,spawn_shell,~/.config/mango/zsh-aliases.sh
 bind=SUPER+SHIFT,r,reload_config
 # Restart DMS shell
 bind=SUPER,r,spawn_shell,systemctl --user restart dms
+
 # ---- Master layout ----
 # Fewer masters
 bind=SUPER+CTRL,d,incnmaster,-1
@@ -329,9 +359,11 @@ bind=SUPER+CTRL,d,incnmaster,-1
 bind=SUPER,i,incnmaster,+1
 # Swap with master
 bind=SUPER+CTRL,Return,zoom
+
 # ---- Dwindle layout ----
 # Toggle dwindle split
 bind=SUPER+SHIFT,i,dwindle_toggle_current_split
+
 # ---- Groups (dwl-style directional) ----
 # Group with right neighbor
 bind=SUPER,g,groupjoin,right
@@ -345,11 +377,13 @@ bind=SUPER+CTRL,k,groupjoin,left
 bind=SUPER+CTRL,l,groupjoin,right
 # Leave group
 bind=SUPER+CTRL,h,groupleave
+
 # ---- Window cycling (0.16.2: focusstack; no thumbnail switcher) ----
 # Next window
 bind=ALT,Tab,focusstack,next
 # Prev window
 bind=ALT+SHIFT,Tab,focusstack,prev
+
 # ---- Focus / move / swap / resize ----
 # Focus left
 bind=SUPER,Left,focusdir,left
@@ -372,12 +406,20 @@ bind=SUPER+SHIFT,Left,resizewin,-50,+0
 bind=SUPER+SHIFT,Right,resizewin,+50,+0
 bind=SUPER+SHIFT,Up,resizewin,+0,-50
 bind=SUPER+SHIFT,Down,resizewin,+0,+50
+
 # ---- Tags (workspaces) ----
+# tag_carousel=1 enables 9<->1 wrap for viewtoleft/right AND the
+# view*left/right_have_client populated-workspace hops below:
 tag_carousel=1
+# Populated-workspace hopping now on SUPER+Tab (swap with former period
+# binds). viewtoright/viewtoleft_have_client skip empty tags, wrap 9<->1
+# via tag_carousel, and work from multi-tag views:
 # Next used workspace
 bind=SUPER,Tab,viewtoright_have_client
 # Prev used workspace
 bind=SUPER+SHIFT,Tab,viewtoleft_have_client
+# Full cycle (every workspace incl. empty) via cycle-tag.sh — immune to
+# the multi-tag/overview states that make viewtoright silently no-op:
 # Cycle workspaces forward
 bind=SUPER,period,spawn_shell,~/.config/mango/cycle-tag.sh next
 # Cycle workspaces back
@@ -394,8 +436,13 @@ bind=SUPER,j,toggle_scratchpad
 bind=SUPER+SHIFT,j,minimized
 # Restore minimized window
 bind=SUPER+CTRL,j,restore_minimized
+# Named scratchpad: kitty dropdown, spawns if not running.
+# 0.16.2 signature is id,title,cmd (guide's width/height args are wrong
+# for this version — windowrule sizes it instead). SUPER+CTRL+Return was
+# taken (zoom), so the dropdown lives on SUPER+SHIFT+Return:
 # Kitty dropdown scratchpad
 bind=SUPER+SHIFT,Return,toggle_named_scratchpad,scratch-term,scratch-term,kitty --class scratch-term
+windowrule=isnamedscratchpad:1,width:1280,height:800,appid:scratch-term
 bind=SUPER,1,view,1,0
 bind=SUPER,2,view,2,0
 bind=SUPER,3,view,3,0
@@ -436,6 +483,7 @@ bind=SUPER+CTRL,9,tagsilent,9
 bind=SUPER+SHIFT,bracketleft,tagtoleft,0
 # Move window one tag right
 bind=SUPER+SHIFT,bracketright,tagtoright,0
+
 # ---- Monitors (dwm parity; inert on single-monitor, live with two) ----
 # Focus prev monitor
 bind=SUPER+ALT,comma,focusmon,left
@@ -445,14 +493,21 @@ bind=SUPER+ALT,period,focusmon,right
 bind=SUPER+ALT+SHIFT,comma,tagmon,left
 # Send window to next monitor
 bind=SUPER+ALT+SHIFT,period,tagmon,right
-# ---- Mouse ----
+
+# ---- Mouse: SUPER+LMB drag (swap if tiled / move if floating), SUPER+SHIFT+LMB force float-drag ----
+# HOW TO READ: line starting with # = comment, ignored. Line like 'mousebind=...' = ACTIVE binding that runs.
 # Drag window (tiled swaps on drop, floating moves)
 mousebind=SUPER,btn_left,moveresize,curmove
-# Float on SHIFT+click (toggles — SHIFT+click on floating re-tiles)
+# Float on SHIFT+click (mirrors dwm Super+Shift+Left-drag in two steps). Single-gesture SHIFT-drag-float
+# is impossible: mango retiles EVERY tiled-window moveresize drag globally, any modifier. So: SHIFT+click
+# floats the window in place, then SUPER+Left-drag moves it (floating windows just move, never swap).
+# NOTE: it toggles — SHIFT+click on an already-floating window re-tiles it.
 mousebind=SUPER+SHIFT,btn_left,togglefloating
 # Drag to resize window
 mousebind=SUPER,btn_right,moveresize,curresize
-# ---- Wheel ----
+
+# ---- Wheel: SUPER+scroll hops POPULATED workspaces (skips empty
+# tags, wraps 9<->1 via tag_carousel) ----
 # Wheel to prev used workspace
 axisbind=SUPER,UP,viewtoleft_have_client
 # Wheel to next used workspace
